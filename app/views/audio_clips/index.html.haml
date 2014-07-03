@@ -1,0 +1,21 @@
+%h1 Listing audio_clips
+
+%table
+  %tr
+    %th Name
+    %th File
+    %th
+    %th
+    %th
+
+  - @audio_clips.each do |audio_clip|
+    %tr
+      %td= audio_clip.name
+      %td= audio_clip.file
+      %td= link_to 'Show', audio_clip
+      %td= link_to 'Edit', edit_audio_clip_path(audio_clip)
+      %td= link_to 'Destroy', audio_clip, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Audio clip', new_audio_clip_path

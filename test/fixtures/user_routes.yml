@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: 
+  route_id: 
+  direction: 1
+  start_stop: MyString
+  current: false
+
+two:
+  user: 
+  route_id: 
+  direction: 1
+  start_stop: MyString
+  current: false

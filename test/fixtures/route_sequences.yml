@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  route_name: MyString
+  direction: 1
+  sequence: 1
+  stop_code: 1
+  stop_name: MyString
+  latitude: 1
+  longitude: 1
+
+two:
+  route_name: MyString
+  direction: 1
+  sequence: 1
+  stop_code: 1
+  stop_name: MyString
+  latitude: 1
+  longitude: 1

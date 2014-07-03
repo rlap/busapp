@@ -82,6 +82,7 @@ GEM
     mime-types (1.25.1)
     minitest (4.7.5)
     multi_json (1.10.1)
+    national_grid (0.2.0)
     orm_adapter (0.5.0)
     pg (0.17.1)
     polyglot (0.3.5)
@@ -140,8 +141,6 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
-    turbolinks (2.2.2)
-      coffee-rails
     tzinfo (0.3.39)
     uglifier (2.5.1)
       execjs (>= 0.3.0)
@@ -162,11 +161,11 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   meta_request
+  national_grid
   pg
   pry-byebug
   pry-rails
   rails (= 4.0.5)
   sass-rails (~> 4.0.2)
   sdoc
-  turbolinks
   uglifier (>= 1.3.0)

@@ -1,0 +1,39 @@
+%h1
+  Route 
+  = @route.name
+
+%h2 Main landmarks
+
+%ul
+  - @route.audio_clips.where(main_attraction: true).each do |landmark|
+    %li
+      = landmark.name
+
+%h2 Start your tour
+
+= form_tag(create_user_route_path(@route), method: "post") do
+  .form-group
+    = label_tag(:start_stop, "Start from")
+    = select_tag(:start_stop, options_for_select([["Stop closest to me", 0],["Tour start (West): #{@route.start_stop}", -1],["Tour start (East): #{@route.end_stop}", 1]]), :class => "form-control")
+
+  .form-group
+    = label_tag(:direction, "Going towards")
+    = select_tag(:direction, options_for_select([["#{@route.start_stop}", direction_value1(@route)],["#{@route.end_stop}", direction_value2(@route)]]), :class => "form-control")
+
+  = hidden_field_tag(:user_id, current_user.id)
+
+  = submit_tag("Go", :class => "btn btn-default")
+
+/ = form_for @user_route do |f|
+/   .form-group
+/     = f.label
+/     = f.select
+
+/   .form-group
+/     = f.label
+/     = f.select
+
+/   = f.submit
+
+/ options_for_select([["Stop closest to me", 0],["Tour start: #{@route.start_stop}", -1],["Tour start: #{@route.end_stop}", 1]])
+

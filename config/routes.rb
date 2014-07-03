@@ -1,4 +1,15 @@
 Busapp::Application.routes.draw do
+  root 'audio_clips#index'
+
+  get '/routes/:id/selection', to: 'routes#selection', as: :route_selection
+  post '/routes/:id/selection', to: 'routes#create_user_route', as: :create_user_route
+  get '/routes/:id/directions', to: 'routes#directions', as: :route_directions
+
+  resources :audio_clips
+
+  resources :routes
+
+  devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

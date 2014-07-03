@@ -1,0 +1,18 @@
+%h1 Choose a route
+
+.jumbotron
+  %h2 placeholder: map
+
+/ - @routes.each do |route|
+/   .row
+/     %button.btn.btn-info
+/       Route '
+/       =route.name
+/       ': 
+/       =route.description 
+
+- @routes.each do |route|
+  = link_to("Route #{route.name}: #{route.description}", route_selection_path(route), class: 'btn btn-info')
+  %br
+
+

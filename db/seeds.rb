@@ -5,3 +5,13 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+routes = Route.create([
+  {name: "11", description: "St.Paul's Cathedral, Houses of Parliament and Sloane Square", start_stop: "King's road/Chelsea", end_stop: "Liverpool Street"},
+  {name: "15", description: "Regent Street shopping, London City and Tower of London", start_stop: "Regent Street", end_stop: "Tower of London"},
+  {name: "14", description: "Museums - V&A, Science, Natural History, British Museum", start_stop: "South Kensington", end_stop: "British Museum"}, 
+  {name: "RV1", description: "Covent Garden, Southbank, and Tower Bridge", start_stop: "Covent Garden", end_stop: "Tower of London"},
+  {name: "139", description: "Abbey Road, Baker Street, Madame Tussaud's, Oxford Street, Trafalgar Square, Waterloo", start_stop: "Abbey Road", end_stop: "South Bank/Waterloo"}, 
+  {name: "9", description: "Royal Parks - Pall Mall, St.Jame's Park, Hyde Park, Royal Albert Hall", start_stop: "High Street Kensington", end_stop: "Trafalgar Square/National Gallery"}, 
+  {name: "274", description: "Royal Parks - Hyde Park, Baker Street, Regent's Park, London Zoo", start_stop: "Lancaster Gate/Hyde Park", end_stop: "Camden Lock Market"}
+  ])

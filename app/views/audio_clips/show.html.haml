@@ -1,0 +1,12 @@
+%p#notice= notice
+
+%p
+  %b Name:
+  = @audio_clip.name
+%p
+  %b File:
+  = @audio_clip.file
+
+= link_to 'Edit', edit_audio_clip_path(@audio_clip)
+\|
+= link_to 'Back', audio_clips_path

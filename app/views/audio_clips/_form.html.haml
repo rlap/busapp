@@ -1,0 +1,16 @@
+= form_for @audio_clip do |f|
+  - if @audio_clip.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@audio_clip.errors.count, "error")} prohibited this audio_clip from being saved:"
+      %ul
+        - @audio_clip.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :file
+    = f.text_area :file
+  .actions
+    = f.submit 'Save'
