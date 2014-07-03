@@ -5,12 +5,21 @@ Busapp::Application.routes.draw do
   post '/routes/:id/selection', to: 'routes#create_user_route', as: :create_user_route
   get '/routes/:id/directions', to: 'routes#directions', as: :route_directions
 
-  post '/'
   resources :audio_clips
 
   resources :routes
 
-  devise_for :users
+  devise_for :users, controllers: { registrations: "users" }
+  
+  devise_scope :user do
+    resources :users, only: [] do
+      collection do
+        get :location, to: "users#set_location"
+      end
+    end
+  end
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

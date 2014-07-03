@@ -2,23 +2,31 @@ $ ->
   # Find the users current location
   x = document.getElementById("demo")
 
-  getLocation = () ->
+  getLocation = (callback) ->
     if navigator.geolocation
-      navigator.geolocation.getCurrentPosition(showPosition)
+      navigator.geolocation.getCurrentPosition(callback)
     else
       x.innerHTML = "Geolocation is not supported by this browser."
 
   showPosition = (position) ->
     x.innerHTML = "Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude
 
-  setUserLocation = () ->
-    path = "/users/location/"+id
+  setUserLocation = (position, successCallback) ->
     $.ajax({
-      type: "POST",
-      url: path,
+      type: "GET",
+      url: "/users/location/",
       dataType: "json",
-      data: {longitude:, latitude}
-      success: 
+      data: {longitude: position.coords.longitude, latitude: position.coords.latitude}
+      success: successCallback
       })
-  getLocation()
-  console.log('hey')
+
+  $(".route-selection").on "click", (e) ->
+    e.preventDefault()
+    href = $(this).attr("href")
+    getLocation (position) ->
+      setUserLocation position, ->
+        window.location = href
+
+
+  # getLocation()
+  # console.log('hey')

@@ -23,11 +23,10 @@ class RoutesController < ApplicationController
   end
 
   def directions
-    binding.pry
     @route = Route.find(params[:id])
     direction = current_user.user_routes.where(current: true).first.direction
-    @tour_stops = @route.route_sequences.where(direction: direction)
-    @closest_stop = @tour_stops.near([51.5179925229418, -0.0825960236590745], 10)
+    tour_stops = @route.route_sequences.where(direction: direction)
+    @closest_stop = tour_stops.near([51.5179925229418, -0.0825960236590745], 10)
   end
   
   # GET /routes

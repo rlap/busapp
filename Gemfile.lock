@@ -55,6 +55,11 @@ GEM
     erubis (2.7.0)
     execjs (2.2.1)
     geocoder (1.2.2)
+    gon (5.1.0)
+      actionpack (>= 2.3.0)
+      json
+      oj
+      request_store (>= 1.0.5)
     haml (4.0.5)
       tilt
     haml-rails (0.5.3)
@@ -84,6 +89,7 @@ GEM
     minitest (4.7.5)
     multi_json (1.10.1)
     national_grid (0.2.0)
+    oj (2.9.8)
     orm_adapter (0.5.0)
     pg (0.17.1)
     polyglot (0.3.5)
@@ -117,6 +123,7 @@ GEM
     rake (10.3.2)
     rdoc (4.1.1)
       json (~> 1.4)
+    request_store (1.0.6)
     sass (3.2.19)
     sass-rails (4.0.3)
       railties (>= 4.0.0, < 5.0)
@@ -158,6 +165,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   devise
   geocoder
+  gon
   haml-rails
   hirb
   jbuilder (~> 1.2)
