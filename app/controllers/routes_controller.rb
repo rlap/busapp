@@ -10,11 +10,25 @@ class RoutesController < ApplicationController
   # POST /routes/1/selection
   def create_user_route
     @route = Route.find(params[:id])
+    
+    case params[:start_stop].to_i
+    when 0
+      direction = current_user.user_routes.where(current: true).first.direction
+      tour_stops = @route.route_sequences.where(direction: direction)
+      closest_stop_id = tour_stops.near([current_user.longitude, current_user.latitude], 10).first.id
+      start_stop = closest_stop_id
+    when -1
+    # To be filled in with West Terminus
+      start_stop = -1
+    when 1
+    # To be filled in with East Terminus
+      start_stop = 1
+    end
+
     @route.user_routes.build(
       user_id: params[:user_id],
       direction: params[:direction],
-  # Need to write a new method to find correct stop - closest to me now + others
-      start_stop: params[:start_stop],
+      start_stop: start_stop,
       current: true
       )
     @route.save
@@ -23,10 +37,7 @@ class RoutesController < ApplicationController
   end
 
   def directions
-    @route = Route.find(params[:id])
-    direction = current_user.user_routes.where(current: true).first.direction
-    tour_stops = @route.route_sequences.where(direction: direction)
-    @closest_stop = tour_stops.near([51.5179925229418, -0.0825960236590745], 10).first
+
   end
   
   # GET /routes
