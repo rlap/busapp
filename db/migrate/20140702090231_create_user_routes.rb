@@ -4,7 +4,7 @@ class CreateUserRoutes < ActiveRecord::Migration
       t.references :user, index: true
       t.references :route, index: true
       t.integer :direction
-      t.string :start_stop
+      t.integer :start_stop
       t.boolean :current
 
       t.timestamps

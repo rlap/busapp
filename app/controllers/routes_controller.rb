@@ -26,7 +26,7 @@ class RoutesController < ApplicationController
     @route = Route.find(params[:id])
     direction = current_user.user_routes.where(current: true).first.direction
     tour_stops = @route.route_sequences.where(direction: direction)
-    @closest_stop = tour_stops.near([51.5179925229418, -0.0825960236590745], 10)
+    @closest_stop = tour_stops.near([51.5179925229418, -0.0825960236590745], 10).first
   end
   
   # GET /routes
