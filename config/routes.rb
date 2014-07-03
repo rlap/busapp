@@ -5,6 +5,7 @@ Busapp::Application.routes.draw do
   post '/routes/:id/selection', to: 'routes#create_user_route', as: :create_user_route
   get '/routes/:id/directions', to: 'routes#directions', as: :route_directions
 
+  post '/'
   resources :audio_clips
 
   resources :routes
