@@ -43,3 +43,4 @@ group :development, :test do
 end
 
 gem 'national_grid'
+gem "geocoder"
