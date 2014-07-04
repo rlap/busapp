@@ -15,3 +15,23 @@ routes = Route.create([
   {name: "9", description: "Royal Parks - Pall Mall, St.Jame's Park, Hyde Park, Royal Albert Hall", start_stop: "High Street Kensington", end_stop: "Trafalgar Square/National Gallery"}, 
   {name: "274", description: "Royal Parks - Hyde Park, Baker Street, Regent's Park, London Zoo", start_stop: "Lancaster Gate/Hyde Park", end_stop: "Camden Lock Market"}
   ])
+
+AudioClip.create(
+  name: "Buckingham Palace", 
+  route_id: Route.find_by(name: "11").id,
+  address: "Buckingham Palace London SW1A 1AA"
+  )
+
+AudioClip.create(
+  name: "GA", 
+  route_id: Route.find_by(name: "11").id,
+  address: "9 Back Hill London EC1R 5EN"
+  )
+
+AudioClip.create(
+  name: "British Museum", 
+  route_id: Route.find_by(name: "11").id,
+  address: "The British Museum Great Russell St London WC1B 3DG"
+  )
+
+
