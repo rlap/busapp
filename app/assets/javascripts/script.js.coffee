@@ -28,7 +28,7 @@ $ ->
         window.location = href
 
   # Equation to calculate the distance between two points with longitude and latitude
-  getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2) ->
+  getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2, clip_id) ->
     R = 6371 # Radius of the earth in km
     dLat = deg2rad(lat2 - lat1) # deg2rad below
     dLon = deg2rad(lon2 - lon1)
@@ -36,36 +36,58 @@ $ ->
     c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
     d = R * c # Distance in km
     d
-    console.log("inside getDistanceFromLatLonInKm")
-    console.log("latitude1 is #{lat1}, latitude2 is #{lat2}, longitude1 is #{lon1}, longitude2 is #{lon2}")
-    console.log(d)
-    playAudioClip(d)
+    # console.log("inside getDistanceFromLatLonInKm")
+    # console.log("latitude1 is #{lat1}, latitude2 is #{lat2}, longitude1 is #{lon1}, longitude2 is #{lon2} for #{clip_id}")
+    # console.log(d)
+    playAudioClip(d, clip_id)
 
   deg2rad = (deg) ->
     deg * (Math.PI / 180)
 
   # Get json audio_clip data
   getAudioClips = (position) ->
-    console.log("inside AudioClips")
-    console.log(position)
+    # console.log("inside AudioClips")
+    # console.log(position)
     $.getJSON("/audio_clips").done (data) ->
       $(data).each (i, audio_clip) ->
         longitude = audio_clip.longitude
         latitude = audio_clip.latitude
-        getDistanceFromLatLonInKm(latitude, longitude, position.coords.latitude, position.coords.longitude)
+        getDistanceFromLatLonInKm(latitude, longitude, position.coords.latitude, position.coords.longitude, audio_clip.id)
 
   # Play audio clip if in close proximity
-  playAudioClip = (distance) ->
+  playAudioClip = (distance, clip_id) ->
     if distance < 0.1
-      alert("You're at the location!")
+      # alert("You're at the location!")
+      id = clip_id
+      # window.location = "/audio_clips/" + id
 
   # Check user location against landmarks
   checkLocation = ->
     console.log("checkLocation called")
     getLocation (position) ->
-      console.log("inside getLocation")
-      console.log(position)
+      # console.log("inside getLocation")
+      # console.log(position)
       getAudioClips (position)
 
+  # Call to TFL api to get the next bus info
+  getStartStopInfo = ->
+    $.getJSON("/").done (data) ->
+      $(data).each (i, audio_clip) ->
+        longitude = audio_clip.longitude
+        latitude = audio_clip.latitude
+        getDistanceFromLatLonInKm(latitude, longitude, position.coords.latitude, position.coords.longitude, audio_clip.id)
 
-  checkLocation()
+  # Continually check for user location and whether there are at a landmark
+  setInterval ->
+    checkLocation()
+  , 3000
+
+
+  # layout false 
+  # ajax call datatype html 
+  # inject inside model window 
+  # Which clip are you on at the moment
+  # Create html on page and then hide and unhide with page 
+  # Put audio play into audio tag 
+  # Later down the line play everything but pause 
+

@@ -11,18 +11,12 @@ class RoutesController < ApplicationController
   def create_user_route
     @route = Route.find(params[:id])
 
-    @route.user_routes.build(
-      user_id: params[:user_id],
-      direction: params[:direction],
-      current: true
-      )
-    @route.save
-
     case params[:start_stop].to_i
     when 0
-      direction = current_user.user_routes.where(current: true).first.direction
+      binding.pry
+      direction = params[:direction]
       tour_stops = @route.route_sequences.where(direction: direction)
-      closest_stop_id = tour_stops.near([current_user.latitude, current_user.longitude], 1000).first.id
+      closest_stop_id = tour_stops.near([current_user.latitude, current_user.longitude], 1000).first.stop_id
       start_stop = closest_stop_id
     when -1
     # To be filled in with West Terminus
@@ -32,7 +26,14 @@ class RoutesController < ApplicationController
       start_stop = 1
     end
 
-    @route.start_stop = start_stop
+    binding.pry
+
+    @route.user_routes.build(
+      user_id: current_user.id,
+      direction: params[:direction].to_i,
+      current: true, 
+      start_stop_id: start_stop
+      )
     @route.save
 
     redirect_to route_directions_path(@route)
