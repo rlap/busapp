@@ -7,5 +7,31 @@
     = javascript_include_tag "application"
     = csrf_meta_tags
   %body
+    %nav.navbar.navbar-default.navbar-fixed-top{role: "navigation"}
+
     .container
+      %span.glyphicon.glyphicon-star
+        Star
       = yield
+
+    %nav.navbar.navbar-default.navbar-fixed-bottom{role: "navigation"}
+      .container
+        %ul.nav.nav-pills
+          %li.active
+            %a{href: "#"}
+              %span.glyphicon.glyphicon-home
+              Home
+          %li
+            %a{href: "#"}
+              %span.glyphicon.glyphicon-headphones
+              Tour
+          %li
+            %a{href: "#"}
+              %span.glyphicon.glyphicon-map-marker
+              Landmarks
+          %li
+            %a{href: "#"}
+              %span.glyphicon.glyphicon-globe
+              Map
+
+
