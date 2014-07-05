@@ -69,18 +69,54 @@ $ ->
       # console.log(position)
       getAudioClips (position)
 
-  # Call to TFL api to get the next bus info
+  # Get bus stop info to use in API call to TFL
   getStartStopInfo = ->
-    $.getJSON("/").done (data) ->
-      $(data).each (i, audio_clip) ->
-        longitude = audio_clip.longitude
-        latitude = audio_clip.latitude
-        getDistanceFromLatLonInKm(latitude, longitude, position.coords.latitude, position.coords.longitude, audio_clip.id)
+    $.getJSON("/userroutes/start_tour").done (data) ->
+      LineID = data.route.name
+      StopCode1 = data.stop.stop_code
+      DirectionID = data.direction
+      console.log("For this request the route is #{LineID} and the stop is #{StopCode1} and the direction is #{DirectionID}")
+      getTflData(LineID, StopCode1, DirectionID)
+
+  # Call to TFL api to get the next bus info
+  getTflData = (LineID, StopCode1, DirectionID) ->
+    requestUrl = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?LineID=" + LineID + "&StopCode1=" + StopCode1 + "&DirectionID=" + DirectionID + "&ReturnList=StopPointIndicator,Towards,EstimatedTime,StopPointName,LineName"
+    console.log(requestUrl)
+    $.ajax({
+      url:requestUrl, 
+      dataType: "json", 
+      complete: addNextBusInfo
+      })
+
+  # Manipulate TFL api data to make it usable
+  addNextBusInfo = (response, xhrStatus) ->
+    console.log("called addNextBusInfo")
+    raw_data = response.responseText
+    raw_data = raw_data.replace(/]/g, "],")
+    raw_data = raw_data.substring(0, raw_data.length - 1);
+    # raw_data = "[" + raw_data + "]" Ask Gerry why this doesn't do the same thing
+    data = eval("["+raw_data+"]")
+    bus_route = data[1][4]
+    towards = data[1][2]
+    stop = data[1][1]
+    stop_letter = data[1][3]
+    heading = "<h2> #{bus_route} bus towards #{towards} departing from #{stop} (bus stop #{stop_letter}) is arriving in... </h2> <ul>"
+    $("#upcoming-buses").append(heading)
+    current_time = new Date()
+    $(data).each (i, bus) ->
+      if i > 0 # First array of info from API is not a bus
+        estimated_arrival = new Date(bus[5])
+        time_to_arrival_ms = estimated_arrival - current_time
+        time_to_arrival_min = Math.round(time_to_arrival_ms/60000)
+        bus_arrival = "<li> #{time_to_arrival_min} min </li>"
+        $("#upcoming-buses").append(bus_arrival)
+    $("#upcoming-buses").append("</ul>")
 
   # Continually check for user location and whether there are at a landmark
   setInterval ->
     checkLocation()
   , 3000
+  getStartStopInfo()
 
 
   # layout false 

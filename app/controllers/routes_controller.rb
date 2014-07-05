@@ -13,7 +13,6 @@ class RoutesController < ApplicationController
 
     case params[:start_stop].to_i
     when 0
-      binding.pry
       direction = params[:direction]
       tour_stops = @route.route_sequences.where(direction: direction)
       closest_stop_id = tour_stops.near([current_user.latitude, current_user.longitude], 1000).first.stop_id
@@ -25,8 +24,6 @@ class RoutesController < ApplicationController
     # To be filled in with East Terminus
       start_stop = 1
     end
-
-    binding.pry
 
     @route.user_routes.build(
       user_id: current_user.id,
