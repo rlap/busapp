@@ -7,6 +7,9 @@ class RoutesController < ApplicationController
     @user_route = @route.user_routes.build
   end
 
+  def map
+  end
+
   # POST /routes/1/selection
   def create_user_route
     @route = Route.find(params[:id])

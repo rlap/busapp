@@ -6,6 +6,7 @@ Busapp::Application.routes.draw do
   get '/routes/:id/directions', to: 'routes#directions', as: :route_directions
 
   get '/userroutes/start_tour', to: 'user_routes#start_tour_info'
+  get '/map', to: 'routes#map'
 
   resources :audio_clips
 
