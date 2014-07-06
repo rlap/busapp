@@ -112,26 +112,60 @@ $ ->
         $("#upcoming-buses").append(bus_arrival)
     $("#upcoming-buses").append("</ul>")
 
-  # Continually check for user location and whether there are at a landmark
-  setInterval ->
-    checkLocation()
-  , 3000
-  getStartStopInfo()
-
   # Add Google maps to app
-  initialize = ->
+  getRoutePathData = (callback)->
+    console.log("inside getRoutePathData")
+    $.getJSON("/route_sequences").done (data) ->
+      route_path = []
+      $(data).each (i, point) ->
+        # google_point = new google.maps.LatLng(point.latitude, point.longitude)
+        route_path.push(new google.maps.LatLng(point.latitude, point.longitude))
+      console.log("inside getRoutePathData")
+      console.log(route_path)
+      callback(route_path)
+
+  # createGooglePoints = (data) ->
+  #   console.log("inside createGooglePoints")
+  #   route_path = []
+  #   $(data).each (i, point) ->
+  #     # google_point = new google.maps.LatLng(point.latitude, point.longitude)
+  #     route_path.push(new google.maps.LatLng(point.latitude, point.longitude))
+  #   route_path
+
+  createRouteMap = (route_path) ->
     if window.location.pathname == "/map"
-      console.log "google maps initialize called"
+      console.log("inside createRouteMap")
+      console.log(route_path)
       mapOptions =
         center: new google.maps.LatLng(51.510154800000000000, -0.133829600000012760)
         zoom: 12
 
       map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions)
-      return
 
-  google.maps.event.addDomListener window, "load", initialize
+      # path = [
+      #   new google.maps.LatLng(51.4793237895424, -0.194779450632099),
+      #   new google.maps.LatLng(51.485536712418, -0.173807703649836),
+      #   new google.maps.LatLng(51.4921077706049, -0.148407348447753)
+      # ]
 
-  alert(window.location.pathname)
+      busRoute = new google.maps.Polyline({
+        path: route_path, 
+        geodesic: true, 
+        strokeColor: '#FF0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 2
+      })
+
+      busRoute.setMap(map)
+
+  # Create google map
+  google.maps.event.addDomListener window, "load", getRoutePathData(createRouteMap)
+
+  # Continually check for user location and whether there are at a landmark
+  setInterval ->
+    checkLocation()
+  , 3000
+  getStartStopInfo()
 
   # layout false 
   # ajax call datatype html 
