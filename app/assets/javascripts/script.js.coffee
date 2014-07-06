@@ -120,16 +120,18 @@ $ ->
 
   # Add Google maps to app
   initialize = ->
-    console.log "google maps initialize called"
-    mapOptions =
-      center: new google.maps.LatLng(51.510154800000000000, -0.133829600000012760)
-      zoom: 12
+    if window.location.pathname == "/map"
+      console.log "google maps initialize called"
+      mapOptions =
+        center: new google.maps.LatLng(51.510154800000000000, -0.133829600000012760)
+        zoom: 12
 
-    map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions)
-    return
+      map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions)
+      return
 
   google.maps.event.addDomListener window, "load", initialize
 
+  alert(window.location.pathname)
 
   # layout false 
   # ajax call datatype html 
