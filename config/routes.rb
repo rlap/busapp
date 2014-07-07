@@ -12,6 +12,7 @@ Busapp::Application.routes.draw do
   resources :route_sequences, only: [:index, :show]
 
   resources :audio_clips
+  get '/landmarks', to: 'audio_clips#route_index'
 
   resources :routes
 

@@ -5,6 +5,10 @@ class AudioClipsController < ApplicationController
   # GET /audio_clips
   # GET /audio_clips.json
   def index
+    @audio_clips = AudioClip.all
+  end
+
+  def route_index
     route_id = current_user.user_routes.where(current: true).first.route_id
     @audio_clips = AudioClip.where(route_id: route_id)
   end
