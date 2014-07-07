@@ -13,6 +13,7 @@ Busapp::Application.routes.draw do
 
   get 'landmarks', to: 'audio_clips#index'
   get '/audio_clips', to: 'audio_clips#route_index'
+  get '/set_current_clip', to: 'user_routes#set_current_clip'
 
   resources :routes
 

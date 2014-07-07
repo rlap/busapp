@@ -1,4 +1,4 @@
-json.(@user_route, :direction)
+json.(@user_route, :direction, :current_clip_id)
 json.route do |json|
   json.(@user_route.route, :name)
 end

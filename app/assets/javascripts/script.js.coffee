@@ -27,8 +27,9 @@ $ ->
       setUserLocation position, ->
         window.location = href
 
-  # Equation to calculate the distance between two points with longitude and latitude
-  getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2, clip_id) ->
+  # Equation to calculate the distance between two points with longitude and latitude (4/7)
+  getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2, clip_id, current_clip_id) ->
+    console.log("getDistanceFromLatLonInKm 4")
     R = 6371 # Radius of the earth in km
     dLat = deg2rad(lat2 - lat1) # deg2rad below
     dLon = deg2rad(lon2 - lon1)
@@ -36,38 +37,58 @@ $ ->
     c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
     d = R * c # Distance in km
     d
-    # console.log("inside getDistanceFromLatLonInKm")
-    # console.log("latitude1 is #{lat1}, latitude2 is #{lat2}, longitude1 is #{lon1}, longitude2 is #{lon2} for #{clip_id}")
-    # console.log(d)
-    playAudioClip(d, clip_id)
+    checkDistanceAndCurrentClip(d, clip_id, current_clip_id, setCurrentClip)
 
   deg2rad = (deg) ->
     deg * (Math.PI / 180)
 
-  # Get json audio_clip data
-  getAudioClips = (position) ->
-    # console.log("inside AudioClips")
-    # console.log(position)
+  # Get users current audio_clip (2/7)
+  getCurrentClip = (position) ->
+    console.log("calling getCurrentClip 2")
+    console.log(position)
+    $.getJSON("/userroutes/start_tour").done (data) ->
+      getAudioClips(position, data.current_clip_id)
+
+  # Get json audio_clip data (3/7)
+  getAudioClips = (position, current_clip_id) ->
+    console.log("calling getAudioClips 3")
     $.getJSON("/audio_clips").done (data) ->
       $(data).each (i, audio_clip) ->
         longitude = audio_clip.longitude
         latitude = audio_clip.latitude
-        getDistanceFromLatLonInKm(latitude, longitude, position.coords.latitude, position.coords.longitude, audio_clip.id)
+        getDistanceFromLatLonInKm(latitude, longitude, position.coords.latitude, position.coords.longitude, audio_clip.id, current_clip_id)
 
-  # Play audio clip if in close proximity
-  playAudioClip = (distance, clip_id) ->
-    if distance < 0.1
+  # Play audio clip if in close proximity (5/7)
+  checkDistanceAndCurrentClip = (distance, clip_id, current_clip_id, callback) ->
+    console.log("calling checkDistanceAndCurrentClip 5")
+    if distance < 0.1 && clip_id != current_clip_id
+      callback(clip_id, playAudio)
       # alert("You're at the location!")
-      id = clip_id
+      # id = clip_id
       # window.location = "/audio_clips/" + id
 
-  # Check user location against landmarks
+  # Show audio clip and play (7/7)
+  playAudio = ->
+    console.log("calling playAudio 7")
+    alert("You're at the location!")
+
+  # Set current clip ID (6/7)
+  setCurrentClip = (clip_id, successCallback) ->
+    console.log("calling setCurrentClip 6")
+    $.ajax({
+      type: "GET",
+      url: "/set_current_clip",
+      dataType: "json",
+      data: {current_clip_id: clip_id}
+      success: successCallback
+      })
+
+  # Check user location against landmarks (1/7)
   checkLocation = ->
-    console.log("checkLocation called")
+    console.log("calling checkLocation 1")
     getLocation (position) ->
-      # console.log("inside getLocation")
-      # console.log(position)
-      getAudioClips (position)
+      console.log(position)
+      getCurrentClip (position)
 
   # Get bus stop info to use in API call to TFL
   getStartStopInfo = ->
@@ -75,13 +96,11 @@ $ ->
       LineID = data.route.name
       StopCode1 = data.stop.stop_code
       DirectionID = data.direction
-      console.log("For this request the route is #{LineID} and the stop is #{StopCode1} and the direction is #{DirectionID}")
       getTflData(LineID, StopCode1, DirectionID)
 
   # Call to TFL api to get the next bus info
   getTflData = (LineID, StopCode1, DirectionID) ->
     requestUrl = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?LineID=" + LineID + "&StopCode1=" + StopCode1 + "&DirectionID=" + DirectionID + "&ReturnList=StopPointIndicator,Towards,EstimatedTime,StopPointName,LineName"
-    console.log(requestUrl)
     $.ajax({
       url:requestUrl, 
       dataType: "json", 
@@ -90,7 +109,6 @@ $ ->
 
   # Manipulate TFL api data to make it usable
   addNextBusInfo = (response, xhrStatus) ->
-    console.log("called addNextBusInfo")
     raw_data = response.responseText
     raw_data = raw_data.replace(/]/g, "],")
     raw_data = raw_data.substring(0, raw_data.length - 1);
@@ -114,19 +132,15 @@ $ ->
 
   # Add Google maps to app
   getRouteInfo = (callback)->
-    console.log("inside getRoutePathData")
     routes = []
     $.getJSON("/routes").done (data) ->
       $(data).each (i, route) ->
         route_instance = []
         route_instance.push(route.id, route.name)
         routes.push(route_instance)
-      console.log("leaving getRouteInfo and passing on...")
-      console.log(routes)
       callback(routes, createRouteMap)
 
   getRoutePathData = (routes, callback) ->
-    console.log("calling getRoutePathData")
     pathHash = {}
     counter = 0
     $(routes).each (i, route) ->
@@ -140,17 +154,9 @@ $ ->
         counter++
         if(counter == routes.length)
           callback(pathHash)
-        # console.log("leaving getRoutePathData and passing on...")
-        # console.log(pathHash)
-        # console.log(pathHash[route_name])
-        # console.log(pathHash[route_name].length)
-    #console.log(pathHash)
-
 
   createRouteMap = (pathHash) ->
     if window.location.pathname == "/map"
-      console.log("calling createRouteMap")
-      #console.log(pathHash)
       mapOptions =
         center: new google.maps.LatLng(51.510154800000000000, -0.133829600000012760)
         zoom: 12
@@ -178,8 +184,6 @@ $ ->
       i = 0 
       while i < routeNames.length
         routeName = routeNames[i]
-        console.log(routeName)
-        console.log(pathHash[routeName])
 
         j = 0
         polylinePoints = []
@@ -187,7 +191,6 @@ $ ->
           curPath = pathHash[routeName][j]
           polylinePoints.push(new google.maps.LatLng(curPath.k, curPath.B))
           j++
-        console.log("here are the polyPoints #{polylinePoints}")
         routePath = new google.maps.Polyline({
           path: polylinePoints, 
           geodesic: true, 
@@ -198,51 +201,12 @@ $ ->
         routePath.setMap(map)
         i++
 
-  # createRouteMap = (route_path) ->
-  #   if window.location.pathname == "/map"
-  #     console.log("inside createRouteMap")
-  #     console.log(route_path)
-  #     mapOptions =
-  #       center: new google.maps.LatLng(51.510154800000000000, -0.133829600000012760)
-  #       zoom: 12
-
-  #     map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions)
-
-  #     path = [
-  #       new google.maps.LatLng(51.4793237895424, -0.194779450632099),
-  #       new google.maps.LatLng(51.485536712418, -0.173807703649836),
-  #       new google.maps.LatLng(51.4921077706049, -0.148407348447753)
-  #     ]
-
-  #     busRoute = new google.maps.Polyline({
-  #       path: route_path, 
-  #       geodesic: true, 
-  #       strokeColor: '#FF0000',
-  #       strokeOpacity: 1.0,
-  #       strokeWeight: 2
-  #     })
-
-  #     busRoute2 = new google.maps.Polyline({
-  #       path: path, 
-  #       geodesic: true, 
-  #       strokeColor: '#FF0000',
-  #       strokeOpacity: 1.0,
-  #       strokeWeight: 2
-  #     })
-
-  #     busRoute.setMap(map)
-  #     busRoute2.setMap(map)
-
-  # Create google map
-  # google.maps.event.addDomListener window, "load", getRoutePathData(createRouteMap)
-
   # Continually check for user location and whether there are at a landmark
   setInterval ->
     checkLocation()
-  , 3000
+  , 10000
   getStartStopInfo()
   google.maps.event.addDomListener window, "load", getRouteInfo(getRoutePathData)
-
   # layout false 
   # ajax call datatype html 
   # inject inside model window 
