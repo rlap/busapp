@@ -1,3 +1,5 @@
+ruby "2.1.1"
+
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -36,10 +38,14 @@ gem 'bootstrap-sass', '~> 3.2.0'
 gem 'autoprefixer-rails'
 
 group :development, :test do
- gem 'pry-rails'
- gem 'pry-byebug'
- gem 'meta_request'
- gem 'hirb'
+  gem 'pry-rails'
+  gem 'pry-byebug'
+  gem 'meta_request'
+  gem 'hirb'
+end
+
+group :production do
+  gem 'rails_12factor'
 end
 
 gem 'national_grid'
