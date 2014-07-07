@@ -28,7 +28,7 @@ $ ->
         window.location = href
 
   # Equation to calculate the distance between two points with longitude and latitude (4/7)
-  getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2, clip_id, current_clip_id) ->
+  getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2, clip_id, current_clip_id, audio_clip) ->
     console.log("getDistanceFromLatLonInKm 4")
     R = 6371 # Radius of the earth in km
     dLat = deg2rad(lat2 - lat1) # deg2rad below
@@ -37,7 +37,7 @@ $ ->
     c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
     d = R * c # Distance in km
     d
-    checkDistanceAndCurrentClip(d, clip_id, current_clip_id, setCurrentClip)
+    checkDistanceAndCurrentClip(d, clip_id, current_clip_id, audio_clip, setCurrentClip)
 
   deg2rad = (deg) ->
     deg * (Math.PI / 180)
@@ -56,22 +56,32 @@ $ ->
       $(data).each (i, audio_clip) ->
         longitude = audio_clip.longitude
         latitude = audio_clip.latitude
-        getDistanceFromLatLonInKm(latitude, longitude, position.coords.latitude, position.coords.longitude, audio_clip.id, current_clip_id)
+        getDistanceFromLatLonInKm(latitude, longitude, position.coords.latitude, position.coords.longitude, audio_clip.id, current_clip_id, audio_clip)
 
   # Play audio clip if in close proximity (5/7)
-  checkDistanceAndCurrentClip = (distance, clip_id, current_clip_id, callback) ->
+  checkDistanceAndCurrentClip = (distance, clip_id, current_clip_id, audio_clip, callback) ->
     console.log("calling checkDistanceAndCurrentClip 5")
     if distance < 0.1 && clip_id != current_clip_id
-      callback(clip_id, playAudio)
+      callback(clip_id, audio_clip, injectHtmlToAudioPage)
       # alert("You're at the location!")
       # id = clip_id
       # window.location = "/audio_clips/" + id
 
   # Show audio clip and play (7/7)
-  playAudio = ->
-    console.log("calling playAudio 7")
-    $('#lightbox').show();
+  injectHtmlToAudioPage = (audio_clip, callback) ->
+    $("#popup-title-title").append(audio_clip.name)
+    $("#popup-img-img").attr("src", audio_clip.image_file)
+    # STILL NEED TO ADD AUDIO FILE
+    console.log("calling injectHtmlToAudioPage 7")
+    callback
+    # $('#lightbox').show();
     # alert("You're at the location!")
+    # $("#popup-img-img").attr("src","http://placekitten.com/200/300");
+    # $("#popup-title-title").append("HELLO")
+
+  showAudioPage = ->
+    console.log("calling showAudioPage 8")
+    $('#lightbox').show();
 
   # Hide the audio clip div if someone clicks on the back button
   $("#audio-back-button").on "click", (e) ->
@@ -80,14 +90,14 @@ $ ->
 
 
   # Set current clip ID (6/7)
-  setCurrentClip = (clip_id, successCallback) ->
+  setCurrentClip = (clip_id, audio_clip, successCallback) ->
     console.log("calling setCurrentClip 6")
     $.ajax({
       type: "GET",
       url: "/set_current_clip",
       dataType: "json",
       data: {current_clip_id: clip_id}
-      success: successCallback
+      success: successCallback(audio_clip, showAudioPage)
       })
 
   # Check user location against landmarks (1/7)
@@ -214,7 +224,7 @@ $ ->
   , 3000
   getStartStopInfo()
   google.maps.event.addDomListener window, "load", getRouteInfo(getRoutePathData)
-  # $("#lightbox").hide()
+  $("#lightbox").hide()
   # layout false 
   # ajax call datatype html 
   # inject inside model window 

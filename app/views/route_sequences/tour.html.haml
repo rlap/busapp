@@ -10,11 +10,11 @@
   #popup-title
     %a{href: "/"}
       %span.glyphicon.glyphicon-chevron-left#audio-back-button
-    %h1 This is the title bar
+    %h1#popup-title-title 
   #popup-audio
     %audio{controls: "controls"}
       %source{src: "/lib/assets/the_beatles.mp3", type: "audio/mpeg"}
         Your browser does not support the audio element. 
   #popup-img
     %h1 This is the pop up image
-    %img{src: "/assets/buckingham_palace.jpg"}/
+    %img#popup-img-img{src: "/assets/buckingham_palace.jpg"}/
