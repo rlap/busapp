@@ -9,7 +9,7 @@ class AudioClipsController < ApplicationController
   end
 
   def route_index
-    route_id = current_user.user_routes.where(current: true).first.route_id
+    route_id = current_user.user_routes.where(current: true).order(created_at: :desc).first.route_id
     @audio_clips = AudioClip.where(route_id: route_id)
   end
 
