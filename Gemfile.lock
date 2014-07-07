@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/theodi/breasal.git
+  revision: 3f191f9f4fc32d9e52a111ed1acea9caf8a965fc
+  specs:
+    breasal (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -94,7 +100,6 @@ GEM
     multi_json (1.10.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
-    national_grid (0.2.0)
     oauth2 (0.9.4)
       faraday (>= 0.8, < 0.10)
       jwt (~> 1.0)
@@ -190,6 +195,7 @@ PLATFORMS
 DEPENDENCIES
   autoprefixer-rails
   bootstrap-sass (~> 3.2.0)
+  breasal!
   coffee-rails (~> 4.0.0)
   devise
   geocoder
@@ -199,7 +205,6 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   meta_request
-  national_grid
   omniauth-google-oauth2
   pg
   pry-byebug
