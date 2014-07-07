@@ -1,6 +1,13 @@
-%h1 Current Tour
+#route_board
 
-%ul
-  - @route_sequences.each do |stop|
-    %li 
-      = stop.stop_name
+  #route
+    %h1 Current Tour
+
+    %ul
+      - @route_sequences.each do |stop|
+        %li 
+          = stop.stop_name
+    
+    #lightbox
+      #popup
+        %h1 This is the pop up box 

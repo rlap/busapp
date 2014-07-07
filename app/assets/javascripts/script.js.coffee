@@ -70,6 +70,7 @@ $ ->
   # Show audio clip and play (7/7)
   playAudio = ->
     console.log("calling playAudio 7")
+    # $('#lightbox').fadeIn();
     alert("You're at the location!")
 
   # Set current clip ID (6/7)
