@@ -45,3 +45,5 @@ end
 gem 'national_grid'
 gem "geocoder"
 gem 'gon'
+
+gem 'omniauth-google-oauth2'
