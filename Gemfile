@@ -1,3 +1,5 @@
+ruby "2.1.1"
+
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -51,5 +53,3 @@ gem "geocoder"
 gem 'gon'
 
 gem 'omniauth-google-oauth2'
-
-ruby "2.1.1"
