@@ -1,6 +1,5 @@
 require 'csv'
 # require 'national_grid'
-require 'pry-rails'
 
 namespace :csv do
   desc "Upload bus stop CSV file"
