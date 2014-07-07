@@ -10,9 +10,13 @@ class RouteSequencesController < ApplicationController
   end
 
   def tour
-    user_route = current_user.user_routes.where(current: true).order(created_at: :desc).first
-    route_id = user_route.route_id
-    direction = user_route.direction
-    @route_sequences = RouteSequence.where(route_id: route_id, direction: direction)
+    if current_user.user_routes.present?
+      user_route = current_user.user_routes.where(current: true).order(created_at: :desc).first
+      route_id = user_route.route_id
+      direction = user_route.direction
+      @route_sequences = RouteSequence.where(route_id: route_id, direction: direction)
+    else 
+      redirect_to root_url, notice: "You haven't started a tour yet - click on a route below to get started"
+    end
   end
 end

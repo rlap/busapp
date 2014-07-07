@@ -1,6 +1,6 @@
 <h2>Sign up</h2>
 
-= link_to "Sign in with Google", user_omniauth_authorize_path(:google_oauth2)
+<%= link_to "Sign in with Google", user_omniauth_authorize_path(:google_oauth2) %>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
   <%= devise_error_messages! %>

@@ -1,5 +1,6 @@
 require 'csv'
 # require 'national_grid'
+require 'breasal'
 
 namespace :csv do
   desc "Upload bus stop CSV file"
@@ -8,10 +9,13 @@ namespace :csv do
     csv = CSV.parse(csv_text, :headers => true)
     csv.each do |row|
       puts row
+      en = Breasal::EastingNorthing.new(easting: row['Location_Easting'].to_f, northing: row['Location_Northing'].to_f)
+      latlng = en.to_wgs84 # => {:latitude=>52.67752501534847, :longitude=>-1.8148108086293673}
+      latitude = latlng[:latitude]
+      longitude = latlng[:longitude]
+      # longitude = NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.longitude unless NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.nil?
 
-      longitude = NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.longitude unless NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.nil?
-
-      latitude = NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.latitude unless NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.nil?
+      # latitude = NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.latitude unless NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.nil?
 
       Stop.create(
         :stop_code => row['Bus_Stop_Code'],
@@ -34,10 +38,14 @@ namespace :csv do
     csv.each do |row|
       if routes.include? row[0]
         puts row
+        en = Breasal::EastingNorthing.new(easting: row['Location_Easting'].to_f, northing: row['Location_Northing'].to_f)
+        latlng = en.to_wgs84 # => {:latitude=>52.67752501534847, :longitude=>-1.8148108086293673}
+        latitude = latlng[:latitude]
+        longitude = latlng[:longitude]
 
-        longitude = NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.longitude unless NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.nil?
+        # longitude = NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.longitude unless NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.nil?
 
-        latitude = NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.latitude unless NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.nil?
+        # latitude = NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.latitude unless NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.nil?
 
         RouteSequence.create(
           :route_name => row[0],
