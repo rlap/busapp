@@ -1,4 +1,5 @@
 class RouteSequencesController < ApplicationController
+  before_filter :authenticate_user!
   # NOT NEEDED
   def index
     @route_sequences_11 = RouteSequence.where(direction: 1, route_name: "11")

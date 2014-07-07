@@ -1,5 +1,6 @@
 class RoutesController < ApplicationController
   before_action :set_route, only: [:show, :edit, :update, :destroy]
+  before_filter :authenticate_user!
 
   # GET /routes/1/selection
   def selection

@@ -1,5 +1,6 @@
 class AudioClipsController < ApplicationController
   before_action :set_audio_clip, only: [:show, :edit, :update, :destroy]
+  before_filter :authenticate_user!
 
   # GET /audio_clips
   # GET /audio_clips.json
