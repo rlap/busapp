@@ -19,25 +19,29 @@ routes = Route.create([
 AudioClip.create(
   name: "Buckingham Palace", 
   route_id: Route.find_by(name: "11").id,
-  address: "Buckingham Palace London SW1A 1AA"
+  address: "Buckingham Palace London SW1A 1AA", 
+  image_file: "/assets/buckingham_palace.jpg"
   )
 
 AudioClip.create(
   name: "GA", 
   route_id: Route.find_by(name: "11").id,
-  address: "9 Back Hill London EC1R 5EN"
+  address: "9 Back Hill London EC1R 5EN",
+  image_file: "/assets/buckingham_palace.jpg"
   )
 
 AudioClip.create(
   name: "British Museum", 
   route_id: Route.find_by(name: "11").id,
-  address: "The British Museum Great Russell St London WC1B 3DG"
+  address: "The British Museum Great Russell St London WC1B 3DG",
+  image_file: "/assets/buckingham_palace.jpg"
   )
 
 AudioClip.create(
   name: "Goya Restaurant", 
   route_id: Route.find_by(name: "11").id,
-  address: "36 Lupus Street London SW1V 3EB"
+  address: "36 Lupus Street London SW1V 3EB",
+  image_file: "/assets/buckingham_palace.jpg"
   )
 
 

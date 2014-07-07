@@ -214,7 +214,7 @@ $ ->
   , 3000
   getStartStopInfo()
   google.maps.event.addDomListener window, "load", getRouteInfo(getRoutePathData)
-  $("#lightbox").hide()
+  # $("#lightbox").hide()
   # layout false 
   # ajax call datatype html 
   # inject inside model window 
