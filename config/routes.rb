@@ -8,7 +8,7 @@ Busapp::Application.routes.draw do
   get '/userroutes/start_tour', to: 'user_routes#start_tour_info'
   get '/map', to: 'routes#map'
 
-  resources :route_sequences, only: [:index]
+  resources :route_sequences, only: [:index, :show]
 
   resources :audio_clips
 

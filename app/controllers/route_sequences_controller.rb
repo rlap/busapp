@@ -4,5 +4,6 @@ class RouteSequencesController < ApplicationController
   end
 
   def show
+    @route_sequences = RouteSequence.where(route_id: params[:id], direction:1).order(:sequence)
   end
 end

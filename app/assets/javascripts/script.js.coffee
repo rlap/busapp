@@ -113,59 +113,135 @@ $ ->
     $("#upcoming-buses").append("</ul>")
 
   # Add Google maps to app
-  getRoutePathData = (callback)->
+  getRouteInfo = (callback)->
     console.log("inside getRoutePathData")
-    $.getJSON("/route_sequences").done (data) ->
-      route_path = []
-      $(data).each (i, point) ->
-        # google_point = new google.maps.LatLng(point.latitude, point.longitude)
-        route_path.push(new google.maps.LatLng(point.latitude, point.longitude))
-      console.log("inside getRoutePathData")
-      console.log(route_path)
-      callback(route_path)
+    routes = []
+    $.getJSON("/routes").done (data) ->
+      $(data).each (i, route) ->
+        route_instance = []
+        route_instance.push(route.id, route.name)
+        routes.push(route_instance)
+      console.log("leaving getRouteInfo and passing on...")
+      console.log(routes)
+      callback(routes, createRouteMap)
 
-  # createGooglePoints = (data) ->
-  #   console.log("inside createGooglePoints")
-  #   route_path = []
-  #   $(data).each (i, point) ->
-  #     # google_point = new google.maps.LatLng(point.latitude, point.longitude)
-  #     route_path.push(new google.maps.LatLng(point.latitude, point.longitude))
-  #   route_path
+  getRoutePathData = (routes, callback) ->
+    console.log("calling getRoutePathData")
+    pathHash = {}
+    counter = 0
+    $(routes).each (i, route) ->
+      route_points = []
+      route_name = route[1]
+      route_id = route[0]
+      $.getJSON("/route_sequences/" + route_id).done (data, status) ->
+        $(data).each (i, point) ->
+          route_points.push(new google.maps.LatLng(point.latitude, point.longitude))
+        pathHash[route_name] = route_points
+        counter++
+        if(counter == routes.length)
+          callback(pathHash)
+        # console.log("leaving getRoutePathData and passing on...")
+        # console.log(pathHash)
+        # console.log(pathHash[route_name])
+        # console.log(pathHash[route_name].length)
+    #console.log(pathHash)
 
-  createRouteMap = (route_path) ->
+
+  createRouteMap = (pathHash) ->
     if window.location.pathname == "/map"
-      console.log("inside createRouteMap")
-      console.log(route_path)
+      console.log("calling createRouteMap")
+      #console.log(pathHash)
       mapOptions =
         center: new google.maps.LatLng(51.510154800000000000, -0.133829600000012760)
         zoom: 12
 
+      styles = [
+        {
+          "stylers": [
+            { "weight": 1.8 },
+            { "hue": "#0091ff" },
+            { "saturation": -81 },
+            { "lightness": -1 },
+            { "gamma": 1.51 },
+            { "visibility": "on" }
+          ]
+        },{
+        }
+      ]
+
       map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions)
+      map.setOptions({styles: styles})
 
-      # path = [
-      #   new google.maps.LatLng(51.4793237895424, -0.194779450632099),
-      #   new google.maps.LatLng(51.485536712418, -0.173807703649836),
-      #   new google.maps.LatLng(51.4921077706049, -0.148407348447753)
-      # ]
+      routeNames = ["RV1", "139", "9", "274", "11", "15", "14"]
+      routeColours = {"RV1":"#2ECC71", "139":"#1ABC9C", "9":"#3498DB", "274":"#9B59B6", "11":"#F1C40F", "15":"#E67E22", "14":"#E74C3C"}
 
-      busRoute = new google.maps.Polyline({
-        path: route_path, 
-        geodesic: true, 
-        strokeColor: '#FF0000',
-        strokeOpacity: 1.0,
-        strokeWeight: 2
-      })
+      i = 0 
+      while i < routeNames.length
+        routeName = routeNames[i]
+        console.log(routeName)
+        console.log(pathHash[routeName])
 
-      busRoute.setMap(map)
+        j = 0
+        polylinePoints = []
+        while j < pathHash[routeName].length
+          curPath = pathHash[routeName][j]
+          polylinePoints.push(new google.maps.LatLng(curPath.k, curPath.B))
+          j++
+        console.log("here are the polyPoints #{polylinePoints}")
+        routePath = new google.maps.Polyline({
+          path: polylinePoints, 
+          geodesic: true, 
+          strokeColor: routeColours[routeName],
+          strokeOpacity: 1.0,
+          strokeWeight: 4
+        })
+        routePath.setMap(map)
+        i++
+
+  # createRouteMap = (route_path) ->
+  #   if window.location.pathname == "/map"
+  #     console.log("inside createRouteMap")
+  #     console.log(route_path)
+  #     mapOptions =
+  #       center: new google.maps.LatLng(51.510154800000000000, -0.133829600000012760)
+  #       zoom: 12
+
+  #     map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions)
+
+  #     path = [
+  #       new google.maps.LatLng(51.4793237895424, -0.194779450632099),
+  #       new google.maps.LatLng(51.485536712418, -0.173807703649836),
+  #       new google.maps.LatLng(51.4921077706049, -0.148407348447753)
+  #     ]
+
+  #     busRoute = new google.maps.Polyline({
+  #       path: route_path, 
+  #       geodesic: true, 
+  #       strokeColor: '#FF0000',
+  #       strokeOpacity: 1.0,
+  #       strokeWeight: 2
+  #     })
+
+  #     busRoute2 = new google.maps.Polyline({
+  #       path: path, 
+  #       geodesic: true, 
+  #       strokeColor: '#FF0000',
+  #       strokeOpacity: 1.0,
+  #       strokeWeight: 2
+  #     })
+
+  #     busRoute.setMap(map)
+  #     busRoute2.setMap(map)
 
   # Create google map
-  google.maps.event.addDomListener window, "load", getRoutePathData(createRouteMap)
+  # google.maps.event.addDomListener window, "load", getRoutePathData(createRouteMap)
 
   # Continually check for user location and whether there are at a landmark
   setInterval ->
     checkLocation()
   , 3000
   getStartStopInfo()
+  google.maps.event.addDomListener window, "load", getRouteInfo(getRoutePathData)
 
   # layout false 
   # ajax call datatype html 
