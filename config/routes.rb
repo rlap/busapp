@@ -1,5 +1,5 @@
 Busapp::Application.routes.draw do
-  root 'audio_clips#index'
+  root 'routes#index'
 
   get '/routes/:id/selection', to: 'routes#selection', as: :route_selection
   post '/routes/:id/selection', to: 'routes#create_user_route', as: :create_user_route
@@ -7,6 +7,7 @@ Busapp::Application.routes.draw do
 
   get '/userroutes/start_tour', to: 'user_routes#start_tour_info'
   get '/map', to: 'routes#map'
+  get '/tour', to: 'route_sequences#tour', as: :tour
 
   resources :route_sequences, only: [:index, :show]
 
