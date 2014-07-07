@@ -11,14 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140707125554) do
+ActiveRecord::Schema.define(version: 20140707205202) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "audio_clips", force: true do |t|
     t.string   "name"
-    t.text     "file"
+    t.text     "audio_file"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "route_id"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 20140707125554) do
     t.float    "latitude"
     t.string   "address"
     t.boolean  "main_attraction"
+    t.string   "image_file"
   end
 
   add_index "audio_clips", ["route_id"], name: "index_audio_clips_on_route_id", using: :btree
