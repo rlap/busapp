@@ -48,7 +48,7 @@ $ ->
   getAudioClips = (position) ->
     # console.log("inside AudioClips")
     # console.log(position)
-    $.getJSON("/landmarks").done (data) ->
+    $.getJSON("/audio_clips").done (data) ->
       $(data).each (i, audio_clip) ->
         longitude = audio_clip.longitude
         latitude = audio_clip.latitude
