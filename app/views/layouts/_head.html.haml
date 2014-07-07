@@ -1,0 +1,7 @@
+%title Busapp
+= include_gon
+= stylesheet_link_tag    "application", media: "all"
+= javascript_include_tag "application"
+%script{src: "https://maps.googleapis.com/maps/api/js?key=AIzaSyAMfb-e_lin2X83TZjxhMvoMlqI_JKfjuk", type: "text/javascript"}
+  :cdata
+= csrf_meta_tags

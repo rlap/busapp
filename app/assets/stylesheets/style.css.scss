@@ -1,5 +1,5 @@
-body { padding-bottom: 70px; }
-body { padding-top: 70px; }
+#main-container { padding-bottom: 70px; }
+#main-container { padding-top: 70px; }
 
 #map-canvas {
   width: 400px;
@@ -10,7 +10,7 @@ body { padding-top: 70px; }
   max-width: none;
 }
 
-#route_board {
+#tour {
   border: 5px solid red;
   position: relative;
 }
@@ -29,12 +29,34 @@ body { padding-top: 70px; }
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: 2000 !important;
 }
 
-#popup {
-  width: 50%;
+#popup-title {
+  background-color: red;
+  margin-top: -0%
+}
+
+#popup-title h1 {
+  display: inline;
+  margin: 0 auto; //doesn't work
+  margin-left: 33%;
+}
+
+#popup-img {
+  width: 90%;
   margin: 0 auto;
   margin-top: 10%;
   text-align: center;
   background-color: black;
+}
+
+#popup-audio {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.glyphicon-chevron-left {
+  color: white;
+  font-size: 34px;
 }

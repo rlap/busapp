@@ -70,8 +70,14 @@ $ ->
   # Show audio clip and play (7/7)
   playAudio = ->
     console.log("calling playAudio 7")
-    # $('#lightbox').fadeIn();
-    alert("You're at the location!")
+    $('#lightbox').show();
+    # alert("You're at the location!")
+
+  # Hide the audio clip div if someone clicks on the back button
+  $("#audio-back-button").on "click", (e) ->
+    e.preventDefault()
+    $("#lightbox").hide()
+
 
   # Set current clip ID (6/7)
   setCurrentClip = (clip_id, successCallback) ->
@@ -205,9 +211,10 @@ $ ->
   # Continually check for user location and whether there are at a landmark
   setInterval ->
     checkLocation()
-  , 10000
+  , 3000
   getStartStopInfo()
   google.maps.event.addDomListener window, "load", getRouteInfo(getRoutePathData)
+  $("#lightbox").hide()
   # layout false 
   # ajax call datatype html 
   # inject inside model window 

@@ -1,0 +1,14 @@
+!!!
+%html
+  %head
+    = render '/layouts/head'
+  %body
+    #tour 
+      = render '/layouts/navbar_top'
+
+      .container#main-container
+        - flash.each do |name, msg|
+          = content_tag :div, msg, :class => "alert alert-#{name}"
+        = yield
+
+      = render '/layouts/navbar_bottom'

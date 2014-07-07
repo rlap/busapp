@@ -21,7 +21,7 @@
             \|
             = link_to 'Login', new_user_session_path
 
-    .container
+    .container#main-container
       - flash.each do |name, msg|
         = content_tag :div, msg, :class => "alert alert-#{name}"
       = yield

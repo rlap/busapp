@@ -15,8 +15,12 @@ class RouteSequencesController < ApplicationController
       route_id = user_route.route_id
       direction = user_route.direction
       @route_sequences = RouteSequence.where(route_id: route_id, direction: direction)
+      @page = "tour"
     else 
       redirect_to root_url, notice: "You haven't started a tour yet - click on a route below to get started"
     end
+    # render layout: "tour"
+    render :tour, layout: "tour"
+    # render :tour, layout: false
   end
 end

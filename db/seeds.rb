@@ -34,4 +34,10 @@ AudioClip.create(
   address: "The British Museum Great Russell St London WC1B 3DG"
   )
 
+AudioClip.create(
+  name: "Goya Restaurant", 
+  route_id: Route.find_by(name: "11").id,
+  address: "36 Lupus Street London SW1V 3EB"
+  )
+
 
