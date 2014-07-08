@@ -1,4 +1,5 @@
 / All of this is inside #tour div
+#tour_page
 %h1 Current Tour
 
 %ul
@@ -12,8 +13,8 @@
       %span.glyphicon.glyphicon-chevron-left#audio-back-button
     %h1#popup-title-title 
   #popup-audio
-    %audio{controls: "controls"}
-      %source{src: "/lib/assets/the_beatles.mp3", type: "audio/mpeg"}
+    %audio{controls: "controls", id: "tour-player"}
+      %source{src: "/sounds/the_beatles.mp3", type: "audio/mpeg"}
         Your browser does not support the audio element. 
   #popup-img
     %h1 This is the pop up image

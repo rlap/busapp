@@ -79,15 +79,16 @@ $ ->
     # $("#popup-img-img").attr("src","http://placekitten.com/200/300");
     # $("#popup-title-title").append("HELLO")
 
+  # Unhide the attraction div and play audio 8
   showAudioPage = ->
     console.log("calling showAudioPage 8")
     $('#lightbox').show();
+    $("#tour-player").trigger('play')
 
   # Hide the audio clip div if someone clicks on the back button
   $("#audio-back-button").on "click", (e) ->
     e.preventDefault()
     $("#lightbox").hide()
-
 
   # Set current clip ID (6/7)
   setCurrentClip = (clip_id, audio_clip, successCallback) ->
@@ -219,12 +220,16 @@ $ ->
         i++
 
   # Continually check for user location and whether there are at a landmark
-  setInterval ->
-    checkLocation()
-  , 3000
+  if !!$("#tour_page").length
+    setInterval ->
+      checkLocation()
+    , 3000
+    document.getElementById('tour-player').addEventListener('ended', $("#lightbox").hide())
   getStartStopInfo()
   google.maps.event.addDomListener window, "load", getRouteInfo(getRoutePathData)
   $("#lightbox").hide()
+  
+  # audio.addEventListener('ended', $("#lightbox").hide());
   # layout false 
   # ajax call datatype html 
   # inject inside model window 
