@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140707205202) do
+ActiveRecord::Schema.define(version: 20140708102551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,8 @@ ActiveRecord::Schema.define(version: 20140707205202) do
     t.string   "address"
     t.boolean  "main_attraction"
     t.string   "image_file"
+    t.float    "east_sequence"
+    t.float    "west_sequence"
   end
 
   add_index "audio_clips", ["route_id"], name: "index_audio_clips_on_route_id", using: :btree
