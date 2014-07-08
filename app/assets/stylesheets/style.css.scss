@@ -34,14 +34,23 @@
 
 #popup-title {
   background-color: red;
-  margin-top: -0%
+  margin-top: 0;
+  position: relative;
 }
 
-#popup-title h1 {
-  display: inline;
-  margin: 0 auto; //doesn't work
-  margin-left: 33%;
+#popup-title-title {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  top: 0;
+  left: 0;
 }
+
+#popup-title-title h1 {
+  margin-top: 0;
+}
+
+
 
 #popup-img {
   width: 90%;

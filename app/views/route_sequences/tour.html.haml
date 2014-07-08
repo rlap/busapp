@@ -9,9 +9,10 @@
 
 #lightbox
   #popup-title
-    %a{href: "/"}
+    %a{href: "/", id: "audio-back-button"}
       %span.glyphicon.glyphicon-chevron-left#audio-back-button
-    %h1#popup-title-title 
+    #popup-title-title
+      %h1#popup-title-title-title HELLO WORLD story of my life
   #popup-audio
     %audio{controls: "controls", id: "tour-player"}
       %source{src: "/sounds/the_beatles.mp3", type: "audio/mpeg"}
@@ -19,3 +20,7 @@
   #popup-img
     %h1 This is the pop up image
     %img#popup-img-img{src: "/assets/buckingham_palace.jpg"}/
+
+/ %audio{controls: "controls", id: "tour-player", onended: "test()"}
+/   %source{src: "/sounds/the_beatles.mp3", type: "audio/mpeg"}
+/     Your browser does not support the audio element. 

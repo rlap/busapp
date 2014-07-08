@@ -29,7 +29,6 @@ $ ->
 
   # Equation to calculate the distance between two points with longitude and latitude (4/7)
   getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2, clip_id, current_clip_id, audio_clip) ->
-    console.log("getDistanceFromLatLonInKm 4")
     R = 6371 # Radius of the earth in km
     dLat = deg2rad(lat2 - lat1) # deg2rad below
     dLon = deg2rad(lon2 - lon1)
@@ -44,14 +43,11 @@ $ ->
 
   # Get users current audio_clip (2/7)
   getCurrentClip = (position) ->
-    console.log("calling getCurrentClip 2")
-    console.log(position)
     $.getJSON("/userroutes/start_tour").done (data) ->
       getAudioClips(position, data.current_clip_id)
 
   # Get json audio_clip data (3/7)
   getAudioClips = (position, current_clip_id) ->
-    console.log("calling getAudioClips 3")
     $.getJSON("/audio_clips").done (data) ->
       $(data).each (i, audio_clip) ->
         longitude = audio_clip.longitude
@@ -60,7 +56,6 @@ $ ->
 
   # Play audio clip if in close proximity (5/7)
   checkDistanceAndCurrentClip = (distance, clip_id, current_clip_id, audio_clip, callback) ->
-    console.log("calling checkDistanceAndCurrentClip 5")
     if distance < 0.1 && clip_id != current_clip_id
       callback(clip_id, audio_clip, injectHtmlToAudioPage)
       # alert("You're at the location!")
@@ -69,10 +64,9 @@ $ ->
 
   # Show audio clip and play (7/7)
   injectHtmlToAudioPage = (audio_clip, callback) ->
-    $("#popup-title-title").append(audio_clip.name)
+    $("#popup-title-title-title").append(audio_clip.name)
     $("#popup-img-img").attr("src", audio_clip.image_file)
     # STILL NEED TO ADD AUDIO FILE
-    console.log("calling injectHtmlToAudioPage 7")
     callback
     # $('#lightbox').show();
     # alert("You're at the location!")
@@ -81,18 +75,20 @@ $ ->
 
   # Unhide the attraction div and play audio 8
   showAudioPage = ->
-    console.log("calling showAudioPage 8")
     $('#lightbox').show();
     $("#tour-player").trigger('play')
+
+  # test = ->  
+  #   alert('Ended!')
 
   # Hide the audio clip div if someone clicks on the back button
   $("#audio-back-button").on "click", (e) ->
     e.preventDefault()
     $("#lightbox").hide()
+    console.log("button pressed")
 
   # Set current clip ID (6/7)
   setCurrentClip = (clip_id, audio_clip, successCallback) ->
-    console.log("calling setCurrentClip 6")
     $.ajax({
       type: "GET",
       url: "/set_current_clip",
@@ -103,9 +99,7 @@ $ ->
 
   # Check user location against landmarks (1/7)
   checkLocation = ->
-    console.log("calling checkLocation 1")
     getLocation (position) ->
-      console.log(position)
       getCurrentClip (position)
 
   # Get bus stop info to use in API call to TFL
@@ -224,17 +218,10 @@ $ ->
     setInterval ->
       checkLocation()
     , 3000
-    document.getElementById('tour-player').addEventListener('ended', $("#lightbox").hide())
+    # $("#lightbox").hide()
   getStartStopInfo()
   google.maps.event.addDomListener window, "load", getRouteInfo(getRoutePathData)
   $("#lightbox").hide()
-  
-  # audio.addEventListener('ended', $("#lightbox").hide());
-  # layout false 
-  # ajax call datatype html 
-  # inject inside model window 
-  # Which clip are you on at the moment
-  # Create html on page and then hide and unhide with page 
-  # Put audio play into audio tag 
-  # Later down the line play everything but pause 
 
+
+   
