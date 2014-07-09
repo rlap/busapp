@@ -13,9 +13,6 @@ namespace :csv do
       latlng = en.to_wgs84 # => {:latitude=>52.67752501534847, :longitude=>-1.8148108086293673}
       latitude = latlng[:latitude]
       longitude = latlng[:longitude]
-      # longitude = NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.longitude unless NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.nil?
-
-      # latitude = NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.latitude unless NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.nil?
 
       Stop.create(
         :stop_code => row['Bus_Stop_Code'],
@@ -43,14 +40,52 @@ namespace :csv do
         latitude = latlng[:latitude]
         longitude = latlng[:longitude]
 
-        # longitude = NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.longitude unless NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.nil?
+        # if row['Run'] == "1" 
+        #   puts 1
+        # elsif row['Run'] == "2" 
+        #   puts 2
+        # else
+        #   puts ERROR
+        #   puts row['Run']
+        # end
 
-        # latitude = NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.latitude unless NationalGrid::EastingNorthing.new(row['Location_Easting'].to_f, row['Location_Northing'].to_f).to_latitude_longitude.nil?
+        if ((row['Run'] == "1") && (Route::WEST_EAST_START1.include? row[0]))
+          east_sequence = row['Sequence'].to_f
+          west_sequence = nil
+        elsif ((row['Run'] == "2") && (Route::WEST_EAST_START1.include? row[0]))
+          west_sequence = row['Sequence'].to_f
+          east_sequence = nil
+        elsif ((row['Run'] == "1") && (Route::EAST_WEST_START1.include? row[0]))
+          west_sequence = row['Sequence'].to_f
+          east_sequence = nil
+        elsif ((row['Run'] == "2") && (Route::EAST_WEST_START1.include? row[0]))
+          east_sequence = row['Sequence'].to_f
+          west_sequence = nil
+        else
+          puts ERROR
+        end
+        # if Route::WEST_EAST_START1.include? row[0] && row['Run'] == "1"
+        #   east_sequence = row['Sequence'].to_f
+        #   west_sequence = nil
+        # elsif Route::WEST_EAST_START1.include? row[0] && row['Run'] == "2"
+        #   west_sequence = row['Sequence'].to_f
+        #   east_sequence = nil
+        # elsif Route::EAST_WEST_START1.include? row[0] && row['Run'] == "1"
+        #   west_sequence = row['Sequence'].to_f
+        #   east_sequence = nil
+        # elsif Route::EAST_WEST_START1.include? row[0] && row['Run'] == "2"
+        #   east_sequence = row['Sequence'].to_f
+        #   west_sequence = nil
+        # else
+        #   puts "ERROR"
+        # end
 
         RouteSequence.create(
           :route_name => row[0],
           :direction => row['Run'],
           :sequence => row['Sequence'],
+          :east_sequence => east_sequence,
+          :west_sequence => west_sequence,
           :stop_code => row['Bus_Stop_Code'],
           :stop_name => row['Stop_Name'],
           :northing => row['Location_Northing'],

@@ -1,8 +1,17 @@
 %h1 Go to the desired bus stop
 
-.jumbotron
-  %h2 placeholder: map
+%div#bus-stop-map-canvas
+
+%div#legend
+  %b Legend
+  %br
+  %img{src: "/assets/bus-stop.png"} 
+  Bus stop
+  %br
+  #circle
+  Your location
 
 #upcoming-buses
 
-%button Start tour
+= button_to "Start tour", tour_path, :class => "btn btn-default", :method => :get 
+ 

@@ -15,6 +15,7 @@ class RouteSequencesController < ApplicationController
       route_id = user_route.route_id
       direction = user_route.direction
       @route_sequences = RouteSequence.where(route_id: route_id, direction: direction)
+      @audio_files = AudioClip.where(route_id: route_id)
       @page = "tour"
       render :tour, layout: "tour"
     else 

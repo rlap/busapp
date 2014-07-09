@@ -1,7 +1,7 @@
 #main-container { padding-bottom: 70px; }
 #main-container { padding-top: 70px; }
 
-#map-canvas {
+#map-canvas, #bus-stop-map-canvas {
   width: 400px;
   height: 400px
 }
@@ -50,8 +50,6 @@
   margin-top: 0;
 }
 
-
-
 #popup-img {
   width: 90%;
   margin: 0 auto;
@@ -72,4 +70,22 @@
 .glyphicon-chevron-left {
   color: white;
   font-size: 34px;
+}
+
+#audio-back-button {
+  z-index: 2010;
+}
+
+#legend {
+  background: white;
+  padding: 10px;
+  border: 1px solid black;
+}
+
+#circle{
+  width: 15px;
+  height: 15px;
+  background-color: #3498DB;
+  display: inline-block;
+  border-radius: 100%
 }

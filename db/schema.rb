@@ -25,7 +25,7 @@ ActiveRecord::Schema.define(version: 20140708102551) do
     t.float    "longitude"
     t.float    "latitude"
     t.string   "address"
-    t.boolean  "main_attraction"
+    t.boolean  "main_attraction", default: false
     t.string   "image_file"
     t.float    "east_sequence"
     t.float    "west_sequence"
@@ -39,6 +39,8 @@ ActiveRecord::Schema.define(version: 20140708102551) do
     t.string   "route_name"
     t.integer  "direction"
     t.integer  "sequence"
+    t.float    "east_sequence"
+    t.float    "west_sequence"
     t.integer  "stop_code"
     t.string   "stop_name"
     t.float    "latitude"

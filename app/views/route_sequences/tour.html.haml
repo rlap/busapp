@@ -3,9 +3,9 @@
 %h1 Current Tour
 
 %ul
-  - @route_sequences.each do |stop|
+  - @audio_files.each do |audio|
     %li 
-      = stop.stop_name
+      = audio.name
 
 #lightbox
   #popup-title
@@ -14,7 +14,7 @@
     #popup-title-title
       %h1#popup-title-title-title HELLO WORLD story of my life
   #popup-audio
-    %audio{controls: "controls", id: "tour-player"}
+    %audio{controls: "controls", id: "tour-player", onended: "test()"}
       %source{src: "/sounds/the_beatles.mp3", type: "audio/mpeg"}
         Your browser does not support the audio element. 
   #popup-img

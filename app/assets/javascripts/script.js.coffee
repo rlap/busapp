@@ -9,6 +9,13 @@ $ ->
     else
       x.innerHTML = "Geolocation is not supported by this browser."
 
+   # Watch the users location to be used in google maps
+  watchUserLocation = (callback) ->
+    if navigator.geolocation
+      navigator.geolocation.watchPosition(callback)
+    else
+      x.innerHTML = "Geolocation is not supported by this browser."
+
   # Set user location in user database to find closest bus stop
   setUserLocation = (position, successCallback) ->
     $.ajax({
@@ -64,8 +71,10 @@ $ ->
 
   # Show audio clip and play (7/7)
   injectHtmlToAudioPage = (audio_clip, callback) ->
+    $("#popup-title-title-title").empty()
     $("#popup-title-title-title").append(audio_clip.name)
     $("#popup-img-img").attr("src", audio_clip.image_file)
+    $("#tour-player").attr("src", audio_clip.audio_file)
     # STILL NEED TO ADD AUDIO FILE
     callback
     # $('#lightbox').show();
@@ -78,14 +87,14 @@ $ ->
     $('#lightbox').show();
     $("#tour-player").trigger('play')
 
-  # test = ->  
-  #   alert('Ended!')
+  window.test = ->  
+    # alert('Ended!')
+    $("#lightbox").hide()
 
   # Hide the audio clip div if someone clicks on the back button
   $("#audio-back-button").on "click", (e) ->
     e.preventDefault()
     $("#lightbox").hide()
-    console.log("button pressed")
 
   # Set current clip ID (6/7)
   setCurrentClip = (clip_id, audio_clip, successCallback) ->
@@ -102,13 +111,16 @@ $ ->
     getLocation (position) ->
       getCurrentClip (position)
 
-  # Get bus stop info to use in API call to TFL
-  getStartStopInfo = ->
+  # Get bus stop info to use in API call to TFL and to create google map
+  getStartStopInfo = (position) ->
+    console.log("inside getStartStopInfo")
+    console.log(position)
     $.getJSON("/userroutes/start_tour").done (data) ->
       LineID = data.route.name
       StopCode1 = data.stop.stop_code
       DirectionID = data.direction
       getTflData(LineID, StopCode1, DirectionID)
+      createBusStopMap(data, position)
 
   # Call to TFL api to get the next bus info
   getTflData = (LineID, StopCode1, DirectionID) ->
@@ -126,10 +138,17 @@ $ ->
     raw_data = raw_data.substring(0, raw_data.length - 1);
     # raw_data = "[" + raw_data + "]" Ask Gerry why this doesn't do the same thing
     data = eval("["+raw_data+"]")
-    bus_route = data[1][4]
-    towards = data[1][2]
-    stop = data[1][1]
-    stop_letter = data[1][3]
+    array = data[1]
+    if array?
+      bus_route = array[4]
+      towards = array[2]
+      stop = array[1]
+      stop_letter = array[3]
+    else
+      bus_route = null
+      towards = null
+      stop = null
+      stop_letter = null
     heading = "<h2> #{bus_route} bus towards #{towards} departing from #{stop} (bus stop #{stop_letter}) is arriving in... </h2> <ul>"
     $("#upcoming-buses").append(heading)
     current_time = new Date()
@@ -172,6 +191,13 @@ $ ->
       mapOptions =
         center: new google.maps.LatLng(51.510154800000000000, -0.133829600000012760)
         zoom: 12
+        panControl: false
+        zoomControl: true
+        mapTypeControl: false
+        zoomControlOptions: {
+          style: google.maps.ZoomControlStyle.SMALL,
+          position: google.maps.ControlPosition.TOP_RIGHT
+        }
 
       styles = [
         {
@@ -213,15 +239,91 @@ $ ->
         routePath.setMap(map)
         i++
 
+  # Create bus stop directions map
+  createBusStopMap = (data,position) ->
+    console.log("calling createBusStopMap")
+    console.log(position)
+    console.log(data)
+    stopLatlng = new google.maps.LatLng(data.stop.latitude, data.stop.longitude)
+    myLatlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+
+    mapOptions =
+      center: stopLatlng
+      zoom: 12
+      panControl: false
+      zoomControl: true
+      mapTypeControl: false
+      zoomControlOptions: {
+        style: google.maps.ZoomControlStyle.SMALL,
+        position: google.maps.ControlPosition.TOP_RIGHT
+      }
+
+    styles = [
+      {
+        "stylers": [
+          { "weight": 1.8 },
+          { "hue": "#0091ff" },
+          { "saturation": -81 },
+          { "lightness": -1 },
+          { "gamma": 1.51 },
+          { "visibility": "on" }
+        ]
+      },{
+      }
+    ]
+
+    map = new google.maps.Map(document.getElementById("bus-stop-map-canvas"), mapOptions)
+    map.setOptions({styles: styles})
+
+    markerStop = new google.maps.Marker(
+      position: stopLatlng
+      map: map
+      title: data.stop.stop_name
+      icon: "/assets/bus-stop.png"
+      animation: google.maps.Animation.DROP
+    )
+
+    markerMyLocation = new google.maps.Marker(
+      position: myLatlng
+      map: map
+      title: "your position"
+      icon: 
+        path: google.maps.SymbolPath.CIRCLE
+        scale: 4
+        strokeColor: "#3498DB"
+    )
+
+    #Automatically set zoom and center
+    markers = [markerStop, markerMyLocation]
+    bounds = new google.maps.LatLngBounds()
+    i = 0
+    while i < markers.length
+      bounds.extend markers[i].getPosition()
+      i++
+    # center the map to the geometric center of all markers
+    map.setCenter(bounds.getCenter())
+    map.fitBounds(bounds) 
+
+    # remove one zoom level to ensure no marker is on the edge
+    map.setZoom(map.getZoom()-1)
+
+    # set a minimum zoom 
+    # if you got only 1 marker or all markers are on the same address map will be zoomed too much
+    if (map.getZoom()> 15)
+      map.setZoom(15);
+
+    # add legend
+    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(document.getElementById('legend'));
+
   # Continually check for user location and whether there are at a landmark
   if !!$("#tour_page").length
     setInterval ->
       checkLocation()
     , 3000
     # $("#lightbox").hide()
-  getStartStopInfo()
-  google.maps.event.addDomListener window, "load", getRouteInfo(getRoutePathData)
-  $("#lightbox").hide()
-
-
+  if !!$('#map-canvas').length
+    google.maps.event.addDomListener window, "load", getRouteInfo(getRoutePathData)
+  if !!$('#bus-stop-map-canvas').length
+    google.maps.event.addDomListener window, "load", watchUserLocation(getStartStopInfo)
+    
    
