@@ -16,21 +16,21 @@ routes = Route.create([
   {name: "274", description: "Hyde Park, Baker Street, Regent's Park, London Zoo", start_stop: "Lancaster Gate/Hyde Park", end_stop: "Camden Lock Market"}
   ])
 
-AudioClip.create(
-  name: "GA", 
-  route_id: Route.find_by(name: "11").id,
-  address: "9 Back Hill London EC1R 5EN",
-  image_file: "/assets/ga-london.jpg", 
-  audio_file: "/sounds/general-assembly.mp3"
-  )
+# AudioClip.create(
+#   name: "GA", 
+#   route_id: Route.find_by(name: "11").id,
+#   address: "9 Back Hill London EC1R 5EN",
+#   image_file: "/assets/ga-london.jpg", 
+#   audio_file: "/sounds/general-assembly.mp3"
+#   )
 
-AudioClip.create(
-  name: "Goya Restaurant", 
-  route_id: Route.find_by(name: "11").id,
-  address: "36 Lupus Street London SW1V 3EB",
-  image_file: "/assets/goya.jpg",
-  audio_file: "/sounds/general-assembly.mp3"
-  )
+# AudioClip.create(
+#   name: "Goya Restaurant", 
+#   route_id: Route.find_by(name: "11").id,
+#   address: "36 Lupus Street London SW1V 3EB",
+#   image_file: "/assets/goya.jpg",
+#   audio_file: "/sounds/general-assembly.mp3"
+#   )
 
 AudioClip.create(
   name: "Bank of England", 

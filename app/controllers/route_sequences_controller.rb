@@ -14,8 +14,11 @@ class RouteSequencesController < ApplicationController
       user_route = current_user.user_routes.where(current: true).order(created_at: :desc).first
       route_id = user_route.route_id
       direction = user_route.direction
-      @route_sequences = RouteSequence.where(route_id: route_id, direction: direction)
-      @audio_files = AudioClip.where(route_id: route_id)
+      if user_route.route.east_or_west(user_route.route.name, direction) == :east_sequence
+        @audio_files = AudioClip.where(route_id: route_id).order(:east_sequence)
+      else
+        @audio_files = AudioClip.where(route_id: route_id).order(:west_sequence)
+      end
       @page = "tour"
       render :tour, layout: "tour"
     else 

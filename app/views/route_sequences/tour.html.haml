@@ -4,8 +4,9 @@
 
 %ul
   - @audio_files.each do |audio|
-    %li 
-      = audio.name
+    - audio.stops_before(current_user, audio).each do |stop|
+      %li= stop.stop_name
+    %li= audio.name
 
 #lightbox
   #popup-title
