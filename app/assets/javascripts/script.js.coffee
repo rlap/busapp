@@ -63,7 +63,7 @@ $ ->
 
   # Play audio clip if in close proximity (5/7)
   checkDistanceAndCurrentClip = (distance, clip_id, current_clip_id, audio_clip, callback) ->
-    if distance < 0.1 && clip_id != current_clip_id
+    if distance < 0.5 && clip_id != current_clip_id
       callback(clip_id, audio_clip, injectHtmlToAudioPage)
       # alert("You're at the location!")
       # id = clip_id
@@ -120,10 +120,20 @@ $ ->
       StopCode1 = data.stop.stop_code
       DirectionID = data.direction
       getTflData(LineID, StopCode1, DirectionID)
+
+  # Get bus stop info to use in API call to TFL and to create google map
+  getStartStop = (position) ->
+    console.log("inside getStartStopInfo")
+    console.log(position)
+    $.getJSON("/userroutes/start_tour").done (data) ->
+      LineID = data.route.name
+      StopCode1 = data.stop.stop_code
+      DirectionID = data.direction
       createBusStopMap(data, position)
 
   # Call to TFL api to get the next bus info
   getTflData = (LineID, StopCode1, DirectionID) ->
+    console.log("called getTflData")
     requestUrl = "http://countdown.api.tfl.gov.uk/interfaces/ura/instant_V1?LineID=" + LineID + "&StopCode1=" + StopCode1 + "&DirectionID=" + DirectionID + "&ReturnList=StopPointIndicator,Towards,EstimatedTime,StopPointName,LineName"
     $.ajax({
       url:requestUrl, 
@@ -324,6 +334,7 @@ $ ->
   if !!$('#map-canvas').length
     google.maps.event.addDomListener window, "load", getRouteInfo(getRoutePathData)
   if !!$('#bus-stop-map-canvas').length
-    google.maps.event.addDomListener window, "load", watchUserLocation(getStartStopInfo)
+    google.maps.event.addDomListener window, "load", watchUserLocation(getStartStop)
+    getStartStopInfo()
     
    
